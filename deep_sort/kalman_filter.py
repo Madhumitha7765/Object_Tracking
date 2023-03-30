@@ -4,9 +4,7 @@ import scipy.linalg
 
 
 """
-Table for the 0.95 quantile of the chi-square distribution with N degrees of
-freedom (contains values for N=1, ..., 9). Taken from MATLAB/Octave's chi2inv
-function and used as Mahalanobis gating threshold.
+Table for the 0.95 quantile of the chi-square distribution with N degrees of freedom
 """
 chi2inv95 = {
     1: 3.8415,
@@ -22,18 +20,7 @@ chi2inv95 = {
 
 class KalmanFilter(object):
     """
-    A simple Kalman filter for tracking bounding boxes in image space.
-
-    The 8-dimensional state space
-
-        x, y, a, h, vx, vy, va, vh
-
-    contains the bounding box center position (x, y), aspect ratio a, height h,
-    and their respective velocities.
-
-    Object motion follows a constant velocity model. The bounding box location
-    (x, y, a, h) is taken as direct observation of the state space (linear
-    observation model).
+    A simple Kalman filter for tracking bounding boxes in image space. 
 
     """
 
@@ -46,11 +33,10 @@ class KalmanFilter(object):
             self._motion_mat[i, ndim + i] = dt
         self._update_mat = np.eye(ndim, 2 * ndim)
 
-        # Motion and observation uncertainty are chosen relative to the current
-        # state estimate. These weights control the amount of uncertainty in
-        # the model. This is a bit hacky.
+        # Motion and observation uncertainty are chosen relative to the current state estimate. 
         self._std_weight_position = 1. / 20
         self._std_weight_velocity = 1. / 160
+
 
     def initiate(self, measurement):
         """Create track from unassociated measurement.
@@ -185,14 +171,12 @@ class KalmanFilter(object):
             kalman_gain, projected_cov, kalman_gain.T))
         return new_mean, new_covariance
 
+
     def gating_distance(self, mean, covariance, measurements,
                         only_position=False):
         """Compute gating distance between state distribution and measurements.
 
-        A suitable distance threshold can be obtained from `chi2inv95`. If
-        `only_position` is False, the chi-square distribution has 4 degrees of
-        freedom, otherwise 2.
-
+       
         Parameters
         ----------
         mean : ndarray
